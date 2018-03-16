@@ -1,0 +1,19 @@
+{
+  "name": "smee-server",
+  "version": "0.0.3",
+  "license": "ISC",
+  "repository": "https://github.com/probot/smee.git",
+  "scripts": {
+    "dev": "tsc -w"
+  },
+  "dependencies": {
+    "express": "^4.16.3"
+  },
+  "engines": {
+    "node": "8.x"
+  },
+  "devDependencies": {
+    "tslint": "^5.9.1",
+    "typescript": "^2.7.2"
+  }
+}
