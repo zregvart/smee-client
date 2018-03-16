@@ -6,20 +6,16 @@ import sse = require('connect-sse');
 
 // const path = require('path')
 
-// const KeepAlive = require('./keep-alive')
+import { KeepAlive } from './keep-alive';
 
 // Tiny logger to prevent logs in tests
 const log = process.env.NODE_ENV === 'test' ? (..._: any[]): void => { } : console.log;
 
-//
+
 // module.exports = () => {
 const events = new EventEmitter();
 
 const app: express.Application = express();
-
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
 
 //   const pubFolder = path.join(__dirname, 'public')
 //
@@ -54,23 +50,23 @@ app.get('/:channel',
       next();
     }
   },
-  sse(), (req, res: express.Response) => {
+  sse(), (req, res) => {
     function send (data: any) {
       res.json(data);
-//       keepAlive.reset()
+      keepAlive.reset()
     }
 
     function close () {
       events.removeListener(channel, send);
-//       keepAlive.stop()
+      keepAlive.stop()
       log('Client disconnected', channel, events.listenerCount(channel));
     }
 
     const channel = req.params.channel;
 
-//     // Setup interval to ping every 30 seconds to keep the connection alive
-//     const keepAlive = new KeepAlive(() => res.json({}, 'ping'), 30 * 1000)
-//     keepAlive.start()
+    // Setup interval to ping every 30 seconds to keep the connection alive
+    const keepAlive = new KeepAlive(() => res.json({}, 'ping'), 30 * 1000)
+    keepAlive.start()
 
     // Allow CORS
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -80,8 +76,9 @@ app.get('/:channel',
 
     // Clean up when the client disconnects
     res.on('close', close);
+    
 
-    // res.json({}, 'ready');
+    res.json({}, 'ready');
 
     log('Client connected', channel, events.listenerCount(channel));
   });

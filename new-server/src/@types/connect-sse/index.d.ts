@@ -1,4 +1,3 @@
-/// <reference types="express" />
 declare namespace Express {
     export interface Response {
         /**
