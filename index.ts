@@ -46,10 +46,11 @@ class Client {
     const req = superagent.post(url.format(target)).send(data.body)
 
     delete data.body
-    delete data['content-length']
 
     Object.keys(data).forEach(key => {
-      req.set(key, data[key])
+      if (key === 'content-type' || key.startsWith('x-github')) {
+        req.set(key, data[key])
+      }
     })
 
     req.end((err, res) => {
